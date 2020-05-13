@@ -5,8 +5,10 @@ import base64
 import re
 import hmac
 import hashlib
+from multiprocessing import Process
 import requests
 import slack
+from flask import Response
 from settings import CHATBOT_ENDPOINT, CHATBOT_SECRET_KEY
 from modules import team_manager
 
@@ -16,16 +18,24 @@ def handle_message(event_data):
     # In case the app doesn't have access to the oAuth Token
     if team is None:
         print('ERROR: Autenticate the App!')
-        return
+        return Response(status=200)
 
     message = event_data['event']
-    if message.get('subtype') is not None:
-        return
-    user_id = message['user']
     # If bot reacted own self.
-    if user_id == team.bot_user_id:
-        return
+    if message['user'] == team.bot_user_id:
+        return Response(status=200)
 
+    if message.get('subtype') is not None:
+        return Response(status=200)
+
+    process = Process(target=background_task, args=(team, message))
+    process.start()
+
+    return Response(status=200)
+
+
+def background_task(team, message):
+    user_id = message['user']
     # remove mention
     text = re.sub('<@[^>]+>', '', message['text'])
     # request chatbot
