@@ -1,12 +1,14 @@
 # coding:utf-8
-from os import environ
+from os import path, environ
+
+APPLICATION_DIR = path.dirname(path.abspath(__file__))
 
 # Application setting
 PORT = 3000
 HOST = '0.0.0.0'
 
 # SQLAlchemy setting
-SQLALCHEMY_DATABASE_URI = 'sqlite:///sample.db'
+SQLALCHEMY_DATABASE_URI = 'sqlite:///{}'.format(path.join(APPLICATION_DIR, 'sample.db'))
 SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
