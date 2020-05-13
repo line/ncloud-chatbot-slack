@@ -7,7 +7,7 @@
   - Supporting chatbot message is only default reply.
 
 ## Requirements
-- python 3.X
+- python since ver.3.6
 
 ### 1. Set chatbot service endpoint & secret key to this application.
 1. Chatbot and API Gateway integration.
